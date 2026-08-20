@@ -26,6 +26,9 @@ const budgetSchema = new mongoose.Schema({
   timestamps: true,
 });
 
+// Compound index for fast lookup of a user's category budget per period
+budgetSchema.index({ user: 1, category: 1, month: 1, year: 1 }, { unique: true });
+
 const Budget = mongoose.model('Budget', budgetSchema);
 
 module.exports = Budget;

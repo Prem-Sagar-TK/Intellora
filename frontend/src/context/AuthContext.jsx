@@ -60,7 +60,12 @@ export const AuthProvider = ({ children }) => {
   };
 
   // ── Logout ────────────────────────────────────────────────────────────
-  const logout = () => {
+  const logout = async () => {
+    try {
+      await api.post('/auth/logout');
+    } catch (err) {
+      console.error('Logout API call failed:', err);
+    }
     localStorage.removeItem(SESSION_KEY);
     setCurrentUser(null);
   };

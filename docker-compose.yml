@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo:7.0
+    container_name: intellora_db
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: intellora_backend
+    restart: always
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=5000
+      - MONGODB_URI=mongodb://mongo:27017/intellora
+      - JWT_SECRET=developmentsupersecretjwtkeyforfinsight_ai_2026
+      - JWT_REFRESH_SECRET=developmentsupersecretrefreshkeyforfinsight_ai_2026
+      - ALLOWED_ORIGINS=http://localhost,http://localhost:80,http://localhost:8080,http://localhost:5173
+      - NODE_ENV=development
+    depends_on:
+      - mongo
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: intellora_frontend
+    restart: always
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+
+volumes:
+  mongo_data:

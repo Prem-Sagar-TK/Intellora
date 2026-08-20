@@ -1,0 +1,9 @@
+node_modules
+npm-debug.log
+.env
+uploads
+.git
+.gitignore
+.github
+tests
+jest.config.js

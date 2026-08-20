@@ -3,7 +3,7 @@ const Budget = require('../models/Budget');
 // @desc    Get budgets for user
 // @route   GET /api/budgets
 // @access  Private
-const getBudgets = async (req, res) => {
+const getBudgets = async (req, res, next) => {
   try {
     // Optionally filter by month/year from query
     const { month, year } = req.query;
@@ -15,14 +15,14 @@ const getBudgets = async (req, res) => {
     const budgets = await Budget.find(query);
     res.json(budgets);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    next(error);
   }
 };
 
 // @desc    Set a new budget
 // @route   POST /api/budgets
 // @access  Private
-const setBudget = async (req, res) => {
+const setBudget = async (req, res, next) => {
   try {
     const { category, limit, month, year } = req.body;
 
@@ -50,14 +50,14 @@ const setBudget = async (req, res) => {
 
     res.status(201).json(budget);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    next(error);
   }
 };
 
 // @desc    Update a budget
 // @route   PUT /api/budgets/:id
 // @access  Private
-const updateBudget = async (req, res) => {
+const updateBudget = async (req, res, next) => {
   try {
     const budget = await Budget.findById(req.params.id);
 
@@ -77,14 +77,14 @@ const updateBudget = async (req, res) => {
 
     res.json(updatedBudget);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    next(error);
   }
 };
 
 // @desc    Delete a budget
 // @route   DELETE /api/budgets/:id
 // @access  Private
-const deleteBudget = async (req, res) => {
+const deleteBudget = async (req, res, next) => {
   try {
     const budget = await Budget.findById(req.params.id);
 
@@ -100,7 +100,7 @@ const deleteBudget = async (req, res) => {
 
     res.json({ id: req.params.id });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    next(error);
   }
 };
 

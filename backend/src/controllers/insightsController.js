@@ -1,10 +1,10 @@
 const Transaction = require('../models/Transaction');
 const Budget = require('../models/Budget');
 
-// @desc    Get financial insights and health score
+// @desc    Get financial insights and health score (Rule-based heuristics)
 // @route   GET /api/insights
 // @access  Private
-const getInsights = async (req, res) => {
+const getInsights = async (req, res, next) => {
   try {
     const transactions = await Transaction.find({ user: req.user.id });
 
@@ -23,9 +23,8 @@ const getInsights = async (req, res) => {
 
     const balance = totalIncome - totalExpense;
 
-    // Financial Health Score Calculation (Simplified)
-    // 0-100 scale
-    // Base 50, + up to 50 based on savings rate (savings / income)
+    // Financial Health Score Calculation (Rule-based heuristic)
+    // 0-100 scale: Base 50, +/- based on savings rate (savings / income)
     let healthScore = 50;
     if (totalIncome > 0) {
       const savingsRate = (totalIncome - totalExpense) / totalIncome;
@@ -38,7 +37,7 @@ const getInsights = async (req, res) => {
       healthScore = 10; // no income but expenses
     }
     
-    // AI Insights (Rule-based for MVP)
+    // Rule-based insights (heuristics)
     const insights = [];
     if (totalExpense > totalIncome && totalIncome > 0) {
       insights.push("Warning: Your expenses exceed your income this period.");
@@ -68,11 +67,11 @@ const getInsights = async (req, res) => {
       totalExpense,
       balance,
       healthScore: Math.max(0, Math.round(healthScore)),
-      insights,
+      insights, // Keep response payload structure for API compatibility
       categorySpending: categories,
     });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    next(error);
   }
 };
 

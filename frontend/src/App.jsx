@@ -1,20 +1,25 @@
+import React, { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { CurrencyProvider } from './context/CurrencyContext';
+
+// Direct imports for public/entry pages
 import LandingPage from './pages/LandingPage';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import ForgotPassword from './pages/ForgotPassword';
 import DashboardLayout from './layouts/DashboardLayout';
-import Dashboard from './pages/Dashboard';
-import Transactions from './pages/Transactions';
-import Insights from './pages/Insights';
-import Budgets from './pages/Budgets';
-import Reports from './pages/Reports';
-import Profile from './pages/Profile';
-import Settings from './pages/Settings';
-import Admin from './pages/Admin';
+
+// Lazy loaded pages for code splitting (dashboard routes)
+const Dashboard = lazy(() => import('./pages/Dashboard'));
+const Transactions = lazy(() => import('./pages/Transactions'));
+const Insights = lazy(() => import('./pages/Insights'));
+const Budgets = lazy(() => import('./pages/Budgets'));
+const Reports = lazy(() => import('./pages/Reports'));
+const Profile = lazy(() => import('./pages/Profile'));
+const Settings = lazy(() => import('./pages/Settings'));
+const Admin = lazy(() => import('./pages/Admin'));
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -31,6 +36,12 @@ const AdminRoute = ({ children }) => {
   return children;
 };
 
+// Modern Loading Spinner Fallback for Suspense
+const LoadingSpinner = () => (
+  <div className="flex items-center justify-center min-h-[60vh]">
+    <div className="animate-spin w-8 h-8 border-4 border-indigo-600 border-t-transparent rounded-full" />
+  </div>
+);
 
 function AppRoutes() {
   return (
@@ -48,16 +59,47 @@ function AppRoutes() {
               <DashboardLayout />
             </ProtectedRoute>
           }>
-            <Route index element={<Dashboard />} />
-            <Route path="transactions" element={<Transactions />} />
-            <Route path="insights" element={<Insights />} />
-            <Route path="budgets" element={<Budgets />} />
-            <Route path="reports" element={<Reports />} />
-            <Route path="profile" element={<Profile />} />
-            <Route path="settings" element={<Settings />} />
+            {/* Suspense wrapper around all lazy-loaded dashboard pages */}
+            <Route index element={
+              <Suspense fallback={<LoadingSpinner />}>
+                <Dashboard />
+              </Suspense>
+            } />
+            <Route path="transactions" element={
+              <Suspense fallback={<LoadingSpinner />}>
+                <Transactions />
+              </Suspense>
+            } />
+            <Route path="insights" element={
+              <Suspense fallback={<LoadingSpinner />}>
+                <Insights />
+              </Suspense>
+            } />
+            <Route path="budgets" element={
+              <Suspense fallback={<LoadingSpinner />}>
+                <Budgets />
+              </Suspense>
+            } />
+            <Route path="reports" element={
+              <Suspense fallback={<LoadingSpinner />}>
+                <Reports />
+              </Suspense>
+            } />
+            <Route path="profile" element={
+              <Suspense fallback={<LoadingSpinner />}>
+                <Profile />
+              </Suspense>
+            } />
+            <Route path="settings" element={
+              <Suspense fallback={<LoadingSpinner />}>
+                <Settings />
+              </Suspense>
+            } />
             <Route path="admin" element={
               <AdminRoute>
-                <Admin />
+                <Suspense fallback={<LoadingSpinner />}>
+                  <Admin />
+                </Suspense>
               </AdminRoute>
             } />
           </Route>

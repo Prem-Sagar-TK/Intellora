@@ -3,19 +3,19 @@ const Subscription = require('../models/Subscription');
 // @desc    Get all subscriptions for user
 // @route   GET /api/subscriptions
 // @access  Private
-const getSubscriptions = async (req, res) => {
+const getSubscriptions = async (req, res, next) => {
   try {
     const subscriptions = await Subscription.find({ user: req.user.id }).sort({ renewalDate: 1 });
     res.json(subscriptions);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    next(error);
   }
 };
 
 // @desc    Add a subscription
 // @route   POST /api/subscriptions
 // @access  Private
-const addSubscription = async (req, res) => {
+const addSubscription = async (req, res, next) => {
   try {
     const { name, cost, category, renewalDate } = req.body;
 
@@ -29,14 +29,14 @@ const addSubscription = async (req, res) => {
 
     res.status(201).json(subscription);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    next(error);
   }
 };
 
 // @desc    Update a subscription
 // @route   PUT /api/subscriptions/:id
 // @access  Private
-const updateSubscription = async (req, res) => {
+const updateSubscription = async (req, res, next) => {
   try {
     const subscription = await Subscription.findById(req.params.id);
 
@@ -51,14 +51,14 @@ const updateSubscription = async (req, res) => {
     const updated = await Subscription.findByIdAndUpdate(req.params.id, req.body, { new: true });
     res.json(updated);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    next(error);
   }
 };
 
 // @desc    Delete a subscription
 // @route   DELETE /api/subscriptions/:id
 // @access  Private
-const deleteSubscription = async (req, res) => {
+const deleteSubscription = async (req, res, next) => {
   try {
     const subscription = await Subscription.findById(req.params.id);
 
@@ -73,7 +73,7 @@ const deleteSubscription = async (req, res) => {
     await subscription.deleteOne();
     res.json({ id: req.params.id });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    next(error);
   }
 };
 

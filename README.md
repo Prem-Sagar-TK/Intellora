@@ -1,47 +1,46 @@
-# 💰 Intellora — Smart Fintech Dashboard
+# 💰 Intellora — Smart Personal Finance Dashboard
 
-> A full-stack AI-powered personal finance management platform built with React + Node.js + MongoDB.
+[![Build Status](https://github.com/Prem-Sagar-TK/Intellora/actions/workflows/ci.yml/badge.svg)](https://github.com/Prem-Sagar-TK/Intellora/actions/workflows/ci.yml)
+[![Docker Support](https://img.shields.io/badge/Docker-Supported-blue?logo=docker)](https://github.com/Prem-Sagar-TK/Intellora)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+[![Vite v8](https://img.shields.io/badge/Vite-v8-646CFF?logo=vite)](https://vite.dev)
 
-![Intellora](https://img.shields.io/badge/Intellora-6366f1?style=for-the-badge)
-![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react)
-![Node.js](https://img.shields.io/badge/Node.js-Express-339933?style=for-the-badge&logo=node.js)
-![MongoDB](https://img.shields.io/badge/MongoDB-Mongoose-47A248?style=for-the-badge&logo=mongodb)
-![Vite](https://img.shields.io/badge/Vite-8-646CFF?style=for-the-badge&logo=vite)
+A secure, full-stack personal finance management dashboard built with React + Node.js + MongoDB + Docker. Designed with a gorgeous, high-fidelity dark-mode interface, robust security controls, and optimized data performance.
 
 ---
 
-## 📖 Overview
+## 🎨 Visual Preview
 
-**Intellora** is a modern personal finance dashboard that helps users track spending, manage budgets, analyze financial insights, and monitor subscriptions — all in one place. The app features JWT-based authentication, interactive Chart.js visualizations, CSV export, dark/light mode, and a clean responsive UI.
+*(Drop screenshots or GIFs of the Dashboard, Transactions, and Reports page here)*
 
 ---
 
 ## 🗂️ Project Structure
 
 ```
-Finsight-Al/
-├── frontend/          # React + Vite client application
+Intellora/
+├── .github/
+│   └── workflows/
+│       └── ci.yml      # GitHub Actions CI pipeline
+├── backend/            # Express REST API
 │   ├── src/
-│   │   ├── pages/     # All page components
-│   │   ├── layouts/   # DashboardLayout (sidebar + header)
-│   │   ├── context/   # AuthContext, ThemeContext
-│   │   ├── utils/     # Helper functions
-│   │   └── assets/    # Static assets
-│   ├── index.html
+│   │   ├── config/     # MongoDB connection setup
+│   │   ├── controllers/# Route controllers (Auth, Tx, Budgets, Insights, Subs)
+│   │   ├── middleware/ # Auth validation, error handler, rate limiters
+│   │   ├── models/     # Mongoose models (compound indexes defined)
+│   │   ├── routes/     # Route endpoints
+│   │   └── tests/      # Jest + Supertest integration test suite
+│   ├── Dockerfile      # Multi-stage production build
 │   └── package.json
-│
-├── backend/           # Node.js + Express REST API
+├── frontend/           # React SPA
 │   ├── src/
-│   │   ├── config/    # MongoDB connection
-│   │   ├── controllers/  # Route handler logic
-│   │   ├── middleware/   # Auth middleware (JWT)
-│   │   ├── models/    # Mongoose schemas
-│   │   ├── routes/    # API route definitions
-│   │   ├── utils/     # Utility helpers
-│   │   └── server.js  # Entry point
-│   ├── seed.js        # Demo data seeder
-│   └── package.json
-│
+│   │   ├── context/    # State context (Auth, Theme, Currency)
+│   │   ├── layouts/    # Dashboard layout (nav structure)
+│   │   ├── pages/      # Code-split dashboard pages
+│   │   └── utils/      # Axios wrapper (transparent silent token renewal)
+│   ├── Dockerfile      # Multi-stage nginx-served build
+│   └── nginx.conf      # SPA routing config
+├── docker-compose.yml  # Multi-container orchestration
 └── README.md
 ```
 
@@ -49,271 +48,167 @@ Finsight-Al/
 
 ## ✨ Features
 
-### 🔐 Authentication
-- User registration & login with **bcrypt** password hashing
-- **JWT** token-based sessions stored in `localStorage`
-- Protected routes with automatic redirect
-- Forgot password flow
-
-### 📊 Dashboard
-- Real-time summary cards (total balance, income, expenses, savings)
-- Monthly spending trend charts (Line / Bar via **Chart.js**)
-- Recent transactions overview
-- Category-wise expense breakdown (Pie / Doughnut charts)
-
-### 💳 Transactions
-- Add, view, filter, and search transactions
-- Category tagging (Food, Transport, Entertainment, etc.)
-- Date range filtering
-- **CSV export** of transaction history
-- CSV import support
-
-### 📈 Insights
-- AI-generated spending patterns and alerts
-- Month-over-month comparison
-- Top spending categories
-- Savings rate analysis
-
-### 🎯 Budgets
-- Create and track budgets per category
-- Visual progress bars with over-budget warnings
-- Budget vs. actual spend comparison charts
-
-### 🔔 Subscriptions
-- Track recurring subscriptions (Netflix, Spotify, etc.)
-- Monthly cost summary
-- Renewal date reminders
-
-### 📋 Reports
-- Downloadable financial reports by date range
-- Income vs. expense summaries
-- Category breakdown tables
-
-### ⚙️ Settings & Profile
-- Dark / Light mode toggle
-- Profile update (name, email, avatar)
-- Notification preferences
-- Billing & plan management
+- **🔐 Robust Token Rotation**: Access tokens expire in 15 minutes, rotated automatically using a secure `httpOnly`, `Secure`, `SameSite=Strict` cookie containing a 7-day refresh token.
+- **📊 Interactive Financial Dashboard**: Track balance, monthly trends, and spending categories using custom Chart.js charts.
+- **💳 Transactions & Budgets**: Categorize transactions, set monthly category spending caps, and receive alert badges.
+- **🛡️ CSV Import/Export**: Export data or import files safely. Contains automatic magic-byte filtering, size limits, and sanitizes against CSV formula injection.
+- **💡 Rule-Based Heuristics & Score**: Evaluates financial habits to calculate a health score (0–100) and displays actionable optimization guides.
+- **⚡ Code-Splitting**: React.lazy + Suspense divides routes into chunks, reducing loading latency.
 
 ---
 
-## 🛠️ Tech Stack
+## 🔒 Security Hardening
 
-### Frontend
-| Technology | Purpose |
-|---|---|
-| React 19 | UI framework |
-| Vite 8 | Build tool & dev server |
-| React Router DOM v7 | Client-side routing |
-| Chart.js + react-chartjs-2 | Data visualization |
-| Tailwind CSS v4 | Utility-first styling |
-| Axios | HTTP client |
-| date-fns | Date formatting & manipulation |
-| @heroicons/react | Icon library |
+- **httpOnly Refresh Cookies**: Eliminates XSS token theft vectors. Access tokens are kept in memory/scoped state.
+- **Rate Limiting**: `express-rate-limit` controls traffic globally (100 req/15 min) and restricts authentication endpoints strictly (15 attempts/15 min) to prevent brute-force attacks.
+- **Input Sanitization**: Request bodies are validated against strict type/range boundaries with `Zod` before database query execution, preventing NoSQL injection.
+- **File Filter Guard**: Multer is restricted to `.csv` mime-types, limited to a `1MB` upload payload size, and processed without saving executable binaries to disk.
+- **CORS Allowed Origins**: Strict CORS configurations prevent arbitrary cross-domain request sharing.
+- **Fail-Safe Startup checks**: In `production`, the server fails loudly and exits immediately if critical environment parameters like `JWT_SECRET` are missing or set to vulnerable placeholders.
 
-### Backend
-| Technology | Purpose |
-|---|---|
-| Node.js + Express 5 | REST API server |
-| MongoDB + Mongoose | Database & ODM |
-| JSON Web Tokens (JWT) | Authentication tokens |
-| bcryptjs | Password hashing |
-| multer | File upload handling |
-| csv-parser | CSV file parsing |
-| dotenv | Environment variable management |
-| nodemon | Development auto-reload |
+---
+
+## ⚡ Database Performance
+
+Mongoose schemas are optimized with compound indexes to ensure fast responses even with large tables:
+- **Transaction**: Compound index on `{ user: 1, date: -1 }` (recent transactions sorting) and `{ user: 1, category: 1 }` (insights aggregation).
+- **Budget**: Unique compound index on `{ user: 1, category: 1, month: 1, year: 1 }` to enforce budget uniqueness constraints.
+
+---
+
+## 🛠️ API Documentation
+
+### Authentication (`/api/auth`)
+
+#### `POST /api/auth/register`
+Creates a new account and sets a 7-day refresh token inside an HTTP-only cookie.
+* **Request JSON:**
+  ```json
+  {
+    "name": "Jane Doe",
+    "email": "jane@example.com",
+    "password": "strongPassword123"
+  }
+  ```
+* **Response JSON (201 Created):**
+  ```json
+  {
+    "_id": "60d0fe4f5311236168a109ca",
+    "name": "Jane Doe",
+    "email": "jane@example.com",
+    "role": "user",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+  }
+  ```
+
+#### `POST /api/auth/login`
+Authenticates a user and issues access/refresh tokens.
+* **Request JSON:**
+  ```json
+  {
+    "email": "jane@example.com",
+    "password": "strongPassword123"
+  }
+  ```
+
+#### `POST /api/auth/refresh`
+Rotates the access token using the HTTP-only cookie.
+* **Response JSON (200 OK):**
+  ```json
+  {
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+  }
+  ```
+
+---
+
+### Transactions (`/api/transactions`)
+
+#### `GET /api/transactions`
+Fetches a paginated slice of user transactions. Supports `page` and `limit` query parameters.
+* **Query Parameters:** `/api/transactions?page=1&limit=2`
+* **Response JSON (200 OK):**
+  ```json
+  {
+    "data": [
+      {
+        "_id": "60d0fe4f5311236168a109cb",
+        "user": "60d0fe4f5311236168a109ca",
+        "amount": 42.50,
+        "type": "expense",
+        "category": "Food",
+        "description": "Lunch meeting",
+        "date": "2026-08-18T00:00:00.000Z",
+        "isRecurring": false,
+        "createdAt": "2026-08-18T14:43:14.000Z"
+      }
+    ],
+    "total": 12,
+    "page": 1,
+    "pages": 6
+  }
+  ```
 
 ---
 
 ## 🚀 Getting Started
 
-### Prerequisites
+### Local Setup (No Containers)
 
-- [Node.js](https://nodejs.org/) v18+
-- [MongoDB](https://www.mongodb.com/try/download/community) (running locally on port `27017`)
-- npm v9+
+#### 1. Configure the Environment
+Create a `.env` file in the `backend/` directory following the blueprint in `backend/.env.example`.
 
----
-
-### 1. Clone the Repository
-
-```bash
-git clone https://github.com/Prem-Sagar-TK/Finsight-Al.git
-cd Finsight-Al
-```
-
----
-
-### 2. Backend Setup
-
+#### 2. Start the Backend
 ```bash
 cd backend
 npm install
-```
-
-Create a `.env` file in the `backend/` directory:
-
-```env
-PORT=5000
-MONGODB_URI=mongodb://localhost:27017/intellora
-JWT_SECRET=your_super_secret_jwt_key_here
-```
-
-Start the backend server:
-
-```bash
-# Development (with auto-reload)
 npm run dev
-
-# Production
-npm start
 ```
 
-The API will be available at **http://localhost:5000**
-
----
-
-### 3. Frontend Setup
-
+#### 3. Start the Frontend
 ```bash
 cd frontend
 npm install
-```
-
-Start the frontend dev server:
-
-```bash
 npm run dev
 ```
-
-The app will be available at **http://localhost:5173**
+Open **http://localhost:5173** to view the app.
 
 ---
 
-### 4. Seed Demo Data (Optional)
+### Containerized Setup (Docker Compose)
 
-To populate the database with sample transactions, budgets, and users:
+Launch the full database-backed architecture locally using single-command container orchestration:
+
+```bash
+# Build and run MongoDB, Backend, and Frontend services
+docker compose up --build
+```
+- **Frontend SPA**: http://localhost:8080
+- **Backend API**: http://localhost:5000/api
+- **Database (MongoDB)**: mongodb://localhost:27017
+
+---
+
+## 🧪 Testing
+
+The backend includes a comprehensive integration test suite running on an in-memory MongoDB server:
 
 ```bash
 cd backend
-node seed.js
+npm install
+npm test
 ```
 
 ---
 
-## 🌐 API Endpoints
+## 🚦 Known Limitations & Roadmap
 
-### Auth — `/api/auth`
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `POST` | `/register` | Register a new user |
-| `POST` | `/login` | Login and receive JWT |
-
-### Transactions — `/api/transactions`
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/` | Get all transactions (auth required) |
-| `POST` | `/` | Add a new transaction |
-| `DELETE` | `/:id` | Delete a transaction |
-| `POST` | `/import` | Import transactions from CSV |
-
-### Budgets — `/api/budgets`
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/` | Get all budgets |
-| `POST` | `/` | Create a new budget |
-| `PUT` | `/:id` | Update a budget |
-| `DELETE` | `/:id` | Delete a budget |
-
-### Insights — `/api/insights`
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/` | Get AI-generated spending insights |
-
-### Health Check
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/api/health` | Server health status |
+- [ ] **Real ML Modeling**: Current insights are calculated using rule-based heuristics. Future releases will integrate regression modeling to predict next-month budgets.
+- [ ] **Plaid Integration**: Sandbox transaction seeding only; future plans include integrating Plaid APIs to sync real bank accounts.
+- [ ] **Multi-Currency Conversion**: Local conversion values are simulated; real-time FX API hooks will be added.
 
 ---
 
-## 📁 Frontend Pages
+## 📄 License
 
-| Route | Page | Description |
-|-------|------|-------------|
-| `/` | Landing Page | Marketing homepage |
-| `/login` | Login | User login |
-| `/register` | Register | New user sign-up |
-| `/forgot-password` | Forgot Password | Password reset flow |
-| `/dashboard` | Dashboard | Main overview |
-| `/dashboard/transactions` | Transactions | Transaction manager |
-| `/dashboard/insights` | Insights | Spending analytics |
-| `/dashboard/budgets` | Budgets | Budget tracker |
-| `/dashboard/subscriptions` | Subscriptions | Subscription manager |
-| `/dashboard/reports` | Reports | Financial reports |
-| `/dashboard/profile` | Profile | User profile |
-| `/dashboard/settings` | Settings | App settings |
-| `/dashboard/billing` | Billing | Plan & billing info |
-
----
-
-## 🔒 Environment Variables
-
-### Backend (`backend/.env`)
-
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `PORT` | Server port | `5000` |
-| `MONGODB_URI` | MongoDB connection string | `mongodb://localhost:27017/intellora` |
-| `JWT_SECRET` | Secret key for signing JWTs | *(required)* |
-
----
-
-## 🏗️ Database Models
-
-### User
-```
-name, email, password (hashed), createdAt
-```
-
-### Transaction
-```
-userId, title, amount, type (income/expense), category, date, notes
-```
-
-### Budget
-```
-userId, category, limit, month, year
-```
-
----
-
-## 📦 Available Scripts
-
-### Frontend (`/frontend`)
-
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start Vite dev server |
-| `npm run build` | Build for production |
-| `npm run preview` | Preview production build |
-| `npm run lint` | Run ESLint |
-
-### Backend (`/backend`)
-
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start with nodemon (hot reload) |
-| `npm start` | Start production server |
-| `node seed.js` | Seed database with demo data |
-
----
-
-## 🎨 Design System
-
-- **Color Palette**: Indigo / Violet primary accents on a light `#eef0f4` base
-- **Dark Mode**: Full dark mode support via `ThemeContext`
-- **Typography**: System font stack with `font-sans`
-- **Charts**: Chart.js with custom color schemes per category
-- **Icons**: Heroicons (outline + solid)
-
+Distributed under the MIT License. See `LICENSE` for more information.
